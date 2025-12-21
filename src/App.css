@@ -1,0 +1,92 @@
+/* Estilo geral da página */
+body {
+  background-color: #f4f6f8;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container principal */
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Títulos */
+h1 {
+  color: #2c3e50;
+}
+
+h2 {
+  margin-top: 30px;
+  color: #27ae60;
+}
+
+/* Lista de agendamentos */
+.agendamento {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background-color: #f9f9f9;
+}
+
+/* Status dos agendamentos */
+.status-confirmado {
+  color: green;
+  font-weight: bold;
+}
+
+.status-cancelado {
+  color: red;
+  font-weight: bold;
+}
+
+/* Botões */
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.btn-confirmar {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-confirmar:hover {
+  background-color: #219150;
+}
+
+.btn-cancelar {
+  background-color: #e74c3c;
+  color: white;
+  margin-left: 8px;
+}
+
+.btn-cancelar:hover {
+  background-color: #c0392b;
+}
+
+/* Inputs do formulário */
+input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+/* Botão adicionar */
+button + hr {
+  margin: 20px 0;
+}
