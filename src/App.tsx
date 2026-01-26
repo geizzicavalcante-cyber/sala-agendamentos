@@ -1,174 +1,112 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 type Agendamento = {
+  id: number;
+  cliente: string;
+  telefone: string;
   servico: string;
+  valor: number;
   profissional: string;
   data: string;
-  horario: string;
-  cliente: string;
-  contato: string;
-  valor: string;
+  hora: string;
+  status: "Confirmado" | "Cancelado";
 };
 
 function App() {
+  const [agendamentos, setAgendamentos] = useState<Agendamento[]>(() => {
+    const dados = localStorage.getItem("agendamentos");
+    return dados ? JSON.parse(dados) : [];
+  });
+
+  const [cliente, setCliente] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [servico, setServico] = useState("");
+  const [valor, setValor] = useState("");
   const [profissional, setProfissional] = useState("");
   const [data, setData] = useState("");
-  const [horario, setHorario] = useState("");
-  const [cliente, setCliente] = useState("");
-  const [contato, setContato] = useState("");
-  const [valor, setValor] = useState("");
-  const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
+  const [hora, setHora] = useState("");
 
-  function agendar() {
+  useEffect(() => {
+    localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+  }, [agendamentos]);
+
+  function adicionarAgendamento() {
     if (
+      !cliente ||
+      !telefone ||
       !servico ||
+      !valor ||
       !profissional ||
       !data ||
-      !horario ||
-      !cliente ||
-      !contato ||
-      !valor
+      !hora
     ) {
       alert("Preencha todos os campos");
       return;
     }
 
-    const novoAgendamento: Agendamento = {
+    const novo: Agendamento = {
+      id: Date.now(),
+      cliente,
+      telefone,
       servico,
+      valor: Number(valor),
       profissional,
       data,
-      horario,
-      cliente,
-      contato,
-      valor,
+      hora,
+      status: "Confirmado",
     };
 
-    setAgendamentos([...agendamentos, novoAgendamento]);
+    setAgendamentos((lista) => [...lista, novo]);
 
+    setCliente("");
+    setTelefone("");
     setServico("");
+    setValor("");
     setProfissional("");
     setData("");
-    setHorario("");
-    setCliente("");
-    setContato("");
-    setValor("");
+    setHora("");
+  }
+
+  function cancelar(id: number) {
+    setAgendamentos((lista) =>
+      lista.map((item) =>
+        item.id === id ? { ...item, status: "Cancelado" } : item
+      )
+    );
   }
 
   return (
     <div className="container">
-      <header className="header">
-        <h1>Doce Beleza Salão</h1>
-        <p>Agende seu horário com facilidade</p>
-      </header>
+      <h1>📅 Doce Beleza Salão</h1>
 
-      <div className="servicos">
-        <button onClick={() => setServico("Cabeleireiro")}>Cabeleireiro</button>
-        <button onClick={() => setServico("Manicure")}>Manicure</button>
-        <button onClick={() => setServico("Sobrancelha")}>Sobrancelha</button>
+      <div className="formulario">
+        <input placeholder="Cliente" value={cliente} onChange={(e) => setCliente(e.target.value)} />
+        <input placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
+        <input placeholder="Serviço" value={servico} onChange={(e) => setServico(e.target.value)} />
+        <input type="number" placeholder="Valor" value={valor} onChange={(e) => setValor(e.target.value)} />
+        <input placeholder="Profissional" value={profissional} onChange={(e) => setProfissional(e.target.value)} />
+        <input type="date" value={data} onChange={(e) => setData(e.target.value)} />
+        <input type="time" value={hora} onChange={(e) => setHora(e.target.value)} />
+
+        <button onClick={adicionarAgendamento}>Adicionar</button>
       </div>
 
-      {servico && (
-        <div className="formulario">
-          <h3>Dados do Agendamento</h3>
+      <h2>Agendamentos</h2>
+      {agendamentos.map((item) => (
+        <div key={item.id} className="card">
+          <strong>{item.cliente}</strong>
+          <p>📞 {item.telefone}</p>
+          <p>🛎️ {item.servico} — 💰 R$ {item.valor}</p>
+          <p>👩‍🎨 {item.profissional}</p>
+          <p>📅 {item.data} ⏰ {item.hora}</p>
+          <p>Status: {item.status}</p>
 
-          <div className="campo">
-            <label>Serviço</label>
-            <input value={servico} disabled />
-          </div>
-
-          <div className="campo">
-            <label>Profissional</label>
-            <select
-              value={profissional}
-              onChange={(e) => setProfissional(e.target.value)}
-            >
-              <option value="">Selecione</option>
-              <option value="Ana">Ana</option>
-              <option value="Bruna">Bruna</option>
-              <option value="Carla">Carla</option>
-            </select>
-          </div>
-
-          <div className="linha">
-            <div className="campo">
-              <label>Data</label>
-              <input
-                type="date"
-                value={data}
-                onChange={(e) => setData(e.target.value)}
-              />
-            </div>
-
-            <div className="campo">
-              <label>Horário</label>
-              <select
-                value={horario}
-                onChange={(e) => setHorario(e.target.value)}
-              >
-                <option value="">Selecione</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="14:00">14:00</option>
-                <option value="15:00">15:00</option>
-                <option value="16:00">16:00</option>
-              </select>
-            </div>
-          </div>
-
-          <h3>Dados da Cliente</h3>
-
-          <div className="campo">
-            <label>Nome da Cliente</label>
-            <input
-              type="text"
-              value={cliente}
-              onChange={(e) => setCliente(e.target.value)}
-            />
-          </div>
-
-          <div className="campo">
-            <label>Contato</label>
-            <input
-              type="text"
-              value={contato}
-              onChange={(e) => setContato(e.target.value)}
-            />
-          </div>
-
-          <div className="campo">
-            <label>Valor do Serviço (R$)</label>
-            <input
-              type="number"
-              value={valor}
-              onChange={(e) => setValor(e.target.value)}
-            />
-          </div>
-
-          <button className="btn" onClick={agendar}>
-            Confirmar Agendamento
-          </button>
+          {item.status !== "Cancelado" && (
+            <button onClick={() => cancelar(item.id)}>Cancelar</button>
+          )}
         </div>
-      )}
-
-      {agendamentos.length > 0 && (
-        <div className="lista">
-          <h2>Agendamentos</h2>
-          {agendamentos.map((item, index) => (
-            <div className="card" key={index}>
-              <p><strong>Cliente:</strong> {item.cliente}</p>
-              <p><strong>Contato:</strong> {item.contato}</p>
-              <p><strong>Serviço:</strong> {item.servico}</p>
-              <p><strong>Profissional:</strong> {item.profissional}</p>
-              <p><strong>Data:</strong> {item.data}</p>
-              <p><strong>Horário:</strong> {item.horario}</p>
-              <p className="valor">R$ {item.valor}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      ))}
     </div>
   );
 }
