@@ -68,7 +68,7 @@ function App() {
     setHora("");
   }
 
-  function cancelar(id: number) {
+  function cancelarAgendamento(id: number) {
     setAgendamentos((lista) =>
       lista.map((item) =>
         item.id === id ? { ...item, status: "Cancelado" } : item
@@ -78,32 +78,79 @@ function App() {
 
   return (
     <div className="container">
-      <h1>📅 Doce Beleza Salão</h1>
+      <header className="header">
+        <h1>Doce Beleza Salão</h1>
+        <p>Agende seu horário com facilidade</p>
+      </header>
 
       <div className="formulario">
-        <input placeholder="Cliente" value={cliente} onChange={(e) => setCliente(e.target.value)} />
-        <input placeholder="Telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
-        <input placeholder="Serviço" value={servico} onChange={(e) => setServico(e.target.value)} />
-        <input type="number" placeholder="Valor" value={valor} onChange={(e) => setValor(e.target.value)} />
-        <input placeholder="Profissional" value={profissional} onChange={(e) => setProfissional(e.target.value)} />
-        <input type="date" value={data} onChange={(e) => setData(e.target.value)} />
-        <input type="time" value={hora} onChange={(e) => setHora(e.target.value)} />
+        <input
+          placeholder="Nome da cliente"
+          value={cliente}
+          onChange={(e) => setCliente(e.target.value)}
+        />
 
-        <button onClick={adicionarAgendamento}>Adicionar</button>
+        <input
+          placeholder="Telefone"
+          value={telefone}
+          onChange={(e) => setTelefone(e.target.value)}
+        />
+
+        <input
+          placeholder="Serviço"
+          value={servico}
+          onChange={(e) => setServico(e.target.value)}
+        />
+
+        <input
+          type="number"
+          placeholder="Valor (R$)"
+          value={valor}
+          onChange={(e) => setValor(e.target.value)}
+        />
+
+        <input
+          placeholder="Profissional"
+          value={profissional}
+          onChange={(e) => setProfissional(e.target.value)}
+        />
+
+        <input
+          type="date"
+          value={data}
+          onChange={(e) => setData(e.target.value)}
+        />
+
+        <input
+          type="time"
+          value={hora}
+          onChange={(e) => setHora(e.target.value)}
+        />
+
+        <button onClick={adicionarAgendamento}>
+          Agendar
+        </button>
       </div>
 
       <h2>Agendamentos</h2>
+
+      {agendamentos.length === 0 && (
+        <p>Nenhum agendamento cadastrado.</p>
+      )}
+
       {agendamentos.map((item) => (
         <div key={item.id} className="card">
           <strong>{item.cliente}</strong>
           <p>📞 {item.telefone}</p>
           <p>🛎️ {item.servico} — 💰 R$ {item.valor}</p>
-          <p>👩‍🎨 {item.profissional}</p>
+          <p>👩‍🎨 Profissional: {item.profissional}</p>
           <p>📅 {item.data} ⏰ {item.hora}</p>
           <p>Status: {item.status}</p>
 
           {item.status !== "Cancelado" && (
-            <button onClick={() => cancelar(item.id)}>Cancelar</button>
+            <button onClick={() => cancelarAgendamento(item.id)}>
+              Cancelar
+            </button>
           )}
         </div>
       ))}
